@@ -1,78 +1,107 @@
 /*! Satisfaction SFS - BetterDiscord Addon v1.0.0 by M3wzs */
+
+/* ============================================================
+   ANIMATIONEN (werden vom Basis-Theme verwendet)
+   ============================================================ */
 @keyframes cv-channel-select {
   from { right: 100%; }
   to { right: 0; }
 }
 
 @keyframes cv-card-loading {
-  0% { opacity: .66; }
-  50% { opacity: .33; }
-  100% { opacity: .66; }
+  0% { opacity: 0.66; }
+  50% { opacity: 0.33; }
+  100% { opacity: 0.66; }
 }
 
-/* --- SATISFACTION BETTERDISCORD UI OVERRIDES & HIGH CONTRAST FIX --- */
 
-.visual-refresh .bd-store-card,
-.visual-refresh .bd-addon-store-card,
-.visual-refresh .bd-addon-card,
-.visual-refresh .bd-addon-header,
-.visual-refresh .bd-notification,
-.visual-refresh .bd-modal-root {
+/* ============================================================
+   BETTERDISCORD UI: KARTEN, MODALE, BENACHRICHTIGUNGEN
+   ============================================================ */
+.visual-refresh :is(
+  .bd-store-card,
+  .bd-addon-store-card,
+  .bd-addon-card,
+  .bd-addon-header,
+  .bd-notification
+) {
   background: rgba(15, 23, 30, 0.85) !important;
   border: 1px solid rgba(56, 239, 125, 0.25) !important;
-  color: #ffffff !important;
-  transition: all 0.2s ease-in-out;
+  color: #ffffff;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-.visual-refresh .bd-store-card:hover,
-.visual-refresh .bd-addon-store-card:hover,
-.visual-refresh .bd-addon-card:hover {
+.visual-refresh :is(.bd-store-card, .bd-addon-store-card, .bd-addon-card):hover {
   background: rgba(20, 30, 40, 0.95) !important;
-  border-color: var(--hsl-main-color, #38ef7d) !important;
+  border-color: var(--main-color, #38ef7d) !important;
   box-shadow: 0 0 12px rgba(56, 239, 125, 0.3) !important;
 }
 
-/* Textlesbarkeit in Addon- und Store-Karten erzwingen */
-.visual-refresh .bd-addon-card *, 
-.visual-refresh .bd-store-card *,
-.visual-refresh .bd-modal-root * {
-  color: #ffffff !important;
+/* Modal mit Glas-Effekt */
+.visual-refresh .bd-modal-root {
+  background: rgba(10, 15, 22, 0.72) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid rgba(56, 239, 125, 0.45) !important;
+  border-radius: 12px;
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+  color: #ffffff;
 }
 
+.visual-refresh :is(.bd-notification-footer, .bd-modal-footer) {
+  background: rgba(0, 0, 0, 0.25) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/*
+ * Textlesbarkeit: Fallback mit Spezifität 0 (:where).
+ * Eigene Farben (Tags, Buttons, Fehler) bleiben dadurch erhalten,
+ * anstatt wie bisher per "* { color: #fff !important }" überschrieben zu werden.
+ */
+:where(.visual-refresh .bd-addon-card, .visual-refresh .bd-store-card, .visual-refresh .bd-modal-root)
+:where(h1, h2, h3, h4, h5, p, span, div, label, li) {
+  color: #ffffff;
+}
+
+/* Tags im Store */
 .visual-refresh .bd-addon-store-card .bd-addon-store-card-tag {
   background: rgba(56, 239, 125, 0.15) !important;
-  border: 1px solid var(--hsl-main-color, #38ef7d) !important;
+  border: 1px solid var(--main-color, #38ef7d) !important;
   color: #38ef7d !important;
 }
 
-.visual-refresh .bd-notification-footer,
-.visual-refresh .bd-modal-footer {
-  background: rgba(0, 0, 0, 0.2) !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-}
 
-.visual-refresh .bd-modal-root {
-  border: 2px solid var(--hsl-main-color, #38ef7d) !important;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6) !important;
-}
-
-/* Buttons im Addon-Manager / Store */
+/* ============================================================
+   BUTTONS
+   ============================================================ */
 .visual-refresh .bd-button-filled.bd-button-color-primary {
+  border: none !important;
   border-radius: 6px !important;
   background: linear-gradient(135deg, #11998e, #38ef7d) !important;
   color: #000000 !important;
   font-weight: 700 !important;
-  border: none !important;
   box-shadow: 0 0 10px rgba(56, 239, 125, 0.3);
+  transition: box-shadow 0.15s ease, filter 0.15s ease, transform 0.15s ease;
 }
 
-.visual-refresh .bd-button-filled.bd-button-color-primary:hover,
-.visual-refresh .bd-button-filled.bd-button-color-primary:active {
-  background: #38ef7d !important;
-  color: #000000 !important;
+.visual-refresh .bd-button-filled.bd-button-color-primary:hover {
+  filter: brightness(1.1);
   box-shadow: 0 0 15px rgba(56, 239, 125, 0.6) !important;
 }
 
+.visual-refresh .bd-button-filled.bd-button-color-primary:active {
+  transform: scale(0.97);
+}
+
+
+/* ============================================================
+   FEHLER
+   ============================================================ */
 .visual-refresh .bd-addon-error-icon {
   background: #ff4757 !important;
 }
@@ -80,4 +109,15 @@
 .visual-refresh .bd-addon-error {
   border: 1px solid #ff4757 !important;
   background: rgba(255, 71, 87, 0.1) !important;
+}
+
+
+/* ============================================================
+   BARRIEREFREIHEIT
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .visual-refresh [class*="bd-"] {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
 }
