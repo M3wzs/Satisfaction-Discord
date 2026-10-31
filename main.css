@@ -1,30 +1,61 @@
 /**
  * @name Satisfaction SFS (Main Module)
  * @author M3wzs
- * @version 1.0.1
- * @description Kern-Stylesheet für das Satisfaction SFS Theme. High-Contrast, perfekter Dark-Mode und absolute Lesbarkeit.
+ * @version 1.0.0
+ * @description Kern-Stylesheet für das Satisfaction SFS Theme. High-Contrast, Glassmorphism, perfekter Dark-Mode und absolute Lesbarkeit.
  */
 
-/* ==========================================================
-   SATISFACTION DESIGN SYSTEM (HIGH CONTRAST & CLEAN DARK)
-   ========================================================== */
+/* ============================================================
+   INHALT
+   0. Design-Tokens (Variablen)
+   1. Dark-Mode-Basis (Textfarben, Kontrast)
+   2. Global (Auswahl, Fokus, Code, Scrollbars)
+   3. Glassmorphism: Modale, Popouts, Menüs, Dropdowns, Tooltips
+   4. Eingabefelder & Suchleisten
+   5. Einstellungen & Server-Einstellungen
+   6. Kanäle & Mitgliederliste
+   7. Profil-/Mute-/Deafen-Leiste (unten links)
+   8. Mentions & Badges
+   9. Buttons
+  10. Branding
+  11. Performance & Barrierefreiheit
+   ============================================================ */
+
+
+/* ============================================================
+   0. DESIGN-TOKENS
+   ============================================================ */
 :root {
-  /* SFS FARBVERLAUF & AKZENTE */
+  /* SFS-Farben (unveränderlich) */
   --main-color: #38ef7d;
   --hover-color: #11998e;
   --success-color: #38ef7d;
   --danger-color: #ff4757;
+
+  /* Abgeleitete SFS-Tokens */
   --sfs-gradient: linear-gradient(135deg, #11998e, #38ef7d);
   --sfs-glow: 0 0 15px rgba(56, 239, 125, 0.5);
+  --sfs-glow-soft: 0 0 10px rgba(56, 239, 125, 0.3);
+  --sfs-border: rgba(56, 239, 125, 0.25);
+  --sfs-border-strong: rgba(56, 239, 125, 0.55);
+  --sfs-tint: rgba(56, 239, 125, 0.12);
+  --sfs-tint-strong: rgba(56, 239, 125, 0.22);
+  --sfs-glass-bg: rgba(10, 15, 22, 0.72);
+  --sfs-glass-blur: blur(24px) saturate(160%);
+  --sfs-panel-bg: rgba(8, 12, 18, 0.9);
+  --sfs-radius: 12px;
+  --sfs-radius-sm: 8px;
+  --sfs-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --sfs-fast: 0.15s;
 
-  /* STATUS FARBEN */
+  /* Status */
   --online-color: #38ef7d;
   --idle-color: #ffa502;
   --dnd-color: #ff4757;
   --streaming-color: #9b59b6;
   --offline-color: #747d8c;
 
-  /* HINTERGRUND */
+  /* Hintergrund */
   --background-shading-percent: 95%;
   --background-image: url(https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1920&auto=format&fit=crop);
   --background-position: center;
@@ -32,17 +63,17 @@
   --background-attachment: fixed;
   --background-filter: saturate(0.9) brightness(0.6);
 
-  /* MODALS & POPOUTS */
+  /* Modals & Popouts */
   --user-popout-image: var(--background-image);
   --user-modal-image: var(--background-image);
   --user-popout-filter: blur(16px) brightness(0.7);
   --user-modal-filter: blur(20px) brightness(0.7);
 
-  /* TYPOGRAPHIE */
+  /* Typografie */
   --main-font: "gg sans", "Inter", sans-serif;
   --code-font: "JetBrains Mono", Consolas, monospace;
 
-  /* KANÄLE */
+  /* Kanäle */
   --channel-normal: #dcdde1;
   --channel-hover: #ffffff;
   --channel-selected: #ffffff;
@@ -52,186 +83,71 @@
   --focus-color: var(--main-color);
 }
 
-/* DARK MODE BASIS - TEXTFARBEN ERZWUNGEN HELL */
+
+/* ============================================================
+   1. DARK-MODE-BASIS (Textfarben & Kontrast)
+   ============================================================ */
 :is(.theme-dark, .theme-darker, .theme-midnight) {
+  /* Flächen (ClearVision-kompatibel) */
   --background-shading: rgba(5, 8, 12, 0.94);
   --card-shading: rgba(15, 22, 30, 0.75);
   --popout-shading: rgba(10, 14, 20, 0.92);
   --modal-shading: rgba(6, 10, 15, 0.96);
   --input-shading: rgba(56, 239, 125, 0.08);
+
+  /* Schwebende Flächen: Glas statt Vollfläche */
+  --background-floating: var(--sfs-glass-bg);
+  --modal-background: transparent;
+  --modal-footer-background: rgba(0, 0, 0, 0.25);
+
+  /* Texte: immer hell */
   --normal-text: #ffffff !important;
+  --text-normal: #ffffff !important;
+  --text-default: #ffffff !important;
+  --text-strong: #ffffff !important;
+  --text-muted: #c0c0c0 !important;
+  --text-subtle: #c0c0c0 !important;
+  --text-placeholder: #d1d1d1 !important;
+  --text-link: #38ef7d !important;
+  --header-primary: #ffffff !important;
+  --header-secondary: #dcdde1 !important;
+  --channels-default: #c8c9ce !important;
+
+  /* Interaktive Elemente */
   --interactive-normal: #dcdde1 !important;
   --interactive-hover: #ffffff !important;
   --interactive-active: #ffffff !important;
   --interactive-muted: #a0a0a0 !important;
-  --text-normal: #ffffff !important;
-  --text-muted: #c0c0c0 !important;
-  --text-placeholder: #d1d1d1 !important;
 }
 
-/* ==========================================================
-   1. INPUTS, SUCHLEISTEN & PLACEHOLDER
-   ========================================================== */
-input,
-textarea,
-[class*="searchBar"],
-[class*="quickswitcher"] input,
-[class*="quickswitcher"] [class*="input"] {
-  color: #ffffff !important;
-  font-weight: 500;
+
+/* ============================================================
+   2. GLOBAL
+   ============================================================ */
+::selection {
+  background: rgba(56, 239, 125, 0.35);
+  color: #ffffff;
 }
 
-::placeholder,
-[class*="placeholder_"],
-[class*="placeholder-"] {
-  color: rgba(255, 255, 255, 0.75) !important;
-  opacity: 1 !important;
+:focus-visible {
+  outline: 2px solid var(--main-color);
+  outline-offset: 2px;
 }
 
-/* Quickswitcher ("Find or start a conversation") */
-[class*="quickswitcher"] [class*="input"] {
-  background: rgba(10, 15, 20, 0.9) !important;
-  border: 1px solid rgba(56, 239, 125, 0.35);
-  border-radius: 8px;
+code,
+pre,
+[class*="markup"] code {
+  font-family: var(--code-font) !important;
 }
 
-/* ==========================================================
-   2. CLEARVISION-BRANDING ENTFERNEN & SFS-BRANDING SETZEN
-   ========================================================== */
-.cv-version,
-#app-mount .cv-watermark,
-[class*="wordmark"] svg,
-[class*="wordmark"] img {
-  display: none !important;
+[class*="markup"] pre,
+[class*="markup"] code.inline {
+  background: rgba(6, 10, 15, 0.85) !important;
+  border: 1px solid var(--sfs-border) !important;
+  color: #e8fff1;
 }
 
-[class*="wordmark"] {
-  display: flex;
-  align-items: center;
-  padding-left: 8px;
-}
-
-[class*="wordmark"]::after {
-  display: none !important;
-}
-
-[class*="wordmark"]::before {
-  display: block !important;
-  content: "SATISFACTION SFS  v1.0.0 (by M3wzs)" !important;
-  font-size: 11px;
-  font-weight: 800;
-  white-space: nowrap;
-  color: #38ef7d;
-  background: rgba(56, 239, 125, 0.2);
-  border: 1px solid rgba(56, 239, 125, 0.4);
-  padding: 2px 8px;
-  border-radius: 4px;
-  letter-spacing: 0.8px;
-  text-shadow: 0 0 8px rgba(56, 239, 125, 0.5);
-}
-
-/* ==========================================================
-   3. LEISTE UNTEN LINKS (Profil, Mute, Deafen, Einstellungen)
-   ========================================================== */
-[class*="panels_"] {
-  background: rgba(8, 12, 16, 0.97) !important;
-  border-top: 1px solid rgba(56, 239, 125, 0.25);
-}
-
-[class*="panels_"] button,
-[class*="panels_"] svg {
-  color: #ffffff !important;
-}
-
-[class*="panels_"] button:hover {
-  background: rgba(56, 239, 125, 0.2) !important;
-}
-
-[class*="panels_"] button:hover svg {
-  color: #38ef7d !important;
-}
-
-/* Aktiv: gemutet / deafened bleibt klar erkennbar */
-[class*="panels_"] button[aria-checked="true"] svg {
-  color: #ff4757 !important;
-}
-
-/* ==========================================================
-   4. @-MENTIONS & BADGES
-   ========================================================== */
-.mention,
-span[class*="mention_"],
-span[class*="mention-"] {
-  background: rgba(56, 239, 125, 0.25) !important;
-  color: #38ef7d !important;
-  font-weight: 700;
-  border-radius: 4px;
-  padding: 0 4px;
-  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
-}
-
-.mention:hover,
-span[class*="mention_"]:hover,
-span[class*="mention-"]:hover {
-  background: #38ef7d !important;
-  color: #000000 !important;
-  box-shadow: 0 0 12px rgba(56, 239, 125, 0.6);
-}
-
-/* Zähler-Badges (ungelesen, Pings) */
-[class*="numberBadge"],
-[class*="textBadge"],
-[class*="countBadge"] {
-  background: #38ef7d !important;
-  color: #000000 !important;
-  font-weight: 800;
-  box-shadow: 0 0 10px rgba(56, 239, 125, 0.55);
-}
-
-/* ==========================================================
-   5. ICONS & BUTTONS
-   ========================================================== */
-[class*="icon_"],
-[class*="iconBadge"],
-svg[class*="icon"] {
-  color: #dcdde1;
-}
-
-button:hover svg,
-[role="button"]:hover svg {
-  color: #38ef7d;
-}
-
-/* Gefüllte Brand-Buttons: dunkler Text auf grünem Grund */
-button[class*="lookFilled"][class*="colorBrand"],
-button[class*="lookFilled"][class*="colorGreen"] {
-  background: var(--sfs-gradient) !important;
-  color: #000000 !important;
-  font-weight: 700;
-  transition: box-shadow 0.15s, filter 0.15s;
-}
-
-button[class*="lookFilled"][class*="colorBrand"]:hover,
-button[class*="lookFilled"][class*="colorGreen"]:hover {
-  box-shadow: var(--sfs-glow);
-  filter: brightness(1.1);
-}
-
-/* Textfeld unten im Chat */
-div[class*="channelTextArea"] div[class*="scrollableContainer"] {
-  background-color: rgba(10, 15, 20, 0.85) !important;
-  border: 1px solid rgba(56, 239, 125, 0.3);
-  border-radius: 10px;
-}
-
-div[class*="channelTextArea"] div[class*="scrollableContainer"]:focus-within {
-  border-color: #38ef7d !important;
-  box-shadow: 0 0 15px rgba(56, 239, 125, 0.4);
-}
-
-/* ==========================================================
-   6. SCROLLBARS
-   ========================================================== */
+/* Scrollbars */
 ::-webkit-scrollbar {
   width: 6px !important;
   height: 6px !important;
@@ -242,6 +158,386 @@ div[class*="channelTextArea"] div[class*="scrollableContainer"]:focus-within {
   border-radius: 8px;
 }
 
-::-webkit-scrollbar-track {
+::-webkit-scrollbar-thumb:hover {
+  background: var(--main-color) !important;
+}
+
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
   background: rgba(0, 0, 0, 0.3) !important;
+}
+
+
+/* ============================================================
+   3. GLASSMORPHISM: MODALE, POPOUTS, MENÜS, DROPDOWNS, TOOLTIPS
+   ============================================================ */
+:is([role="dialog"], [role="menu"], [role="listbox"], [class*="userPopoutOuter"]) {
+  background: var(--sfs-glass-bg) !important;
+  -webkit-backdrop-filter: var(--sfs-glass-blur);
+  backdrop-filter: var(--sfs-glass-blur);
+  border: 1px solid var(--sfs-border) !important;
+  border-radius: var(--sfs-radius) !important;
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+  color: #ffffff;
+}
+
+/* Modal-Aufbau: Kopf, Fuß, Inhalt */
+[role="dialog"] [class*="footer"] {
+  background: rgba(0, 0, 0, 0.25) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+[role="dialog"] :is(h1, h2, h3, h4) {
+  color: #ffffff;
+}
+
+/* Kontextmenüs & Dropdowns */
+[role="menu"] {
+  padding: 6px !important;
+}
+
+[role="menuitem"],
+[role="option"] {
+  color: #dcdde1;
+  border-radius: var(--sfs-radius-sm);
+  transition: background-color var(--sfs-fast) var(--sfs-ease), color var(--sfs-fast) var(--sfs-ease);
+}
+
+[role="menuitem"]:hover,
+[role="menu"] [class*="focused"],
+[role="option"]:hover,
+[role="option"][aria-selected="true"] {
+  background: var(--sfs-tint-strong) !important;
+  color: #ffffff !important;
+}
+
+/* Gefährliche Aktionen bleiben rot */
+[role="menu"] [class*="colorDanger"]:hover,
+[role="menu"] [class*="colorDanger"][class*="focused"] {
+  background: rgba(255, 71, 87, 0.9) !important;
+  color: #ffffff !important;
+}
+
+/* Select-Felder */
+[class*="select_"] [class*="control"],
+[class*="select_"] [class*="value"],
+[class*="select_"] [class*="singleValue"] {
+  background: rgba(10, 15, 20, 0.9) !important;
+  color: #ffffff !important;
+  border-color: var(--sfs-border) !important;
+}
+
+/* Tooltips */
+[class*="tooltip_"] {
+  background: rgba(6, 10, 15, 0.95) !important;
+  color: #ffffff !important;
+  border: 1px solid var(--sfs-border);
+  border-radius: var(--sfs-radius-sm);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Fallback ohne backdrop-filter */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :is([role="dialog"], [role="menu"], [role="listbox"], [class*="userPopoutOuter"]) {
+    background: rgba(8, 12, 18, 0.97) !important;
+  }
+}
+
+
+/* ============================================================
+   4. EINGABEFELDER & SUCHLEISTEN
+   ============================================================ */
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]),
+textarea,
+[class*="searchBar"],
+[class*="quickswitcher"] [class*="input"] {
+  background: rgba(10, 15, 20, 0.88) !important;
+  color: #ffffff !important;
+  font-weight: 500;
+  border: 1px solid var(--sfs-border);
+  border-radius: var(--sfs-radius-sm);
+  transition: border-color var(--sfs-fast) var(--sfs-ease), box-shadow var(--sfs-fast) var(--sfs-ease);
+}
+
+input:focus,
+textarea:focus,
+[class*="searchBar"]:focus-within,
+[class*="quickswitcher"] [class*="input"]:focus-within {
+  border-color: var(--main-color) !important;
+  box-shadow: var(--sfs-glow-soft);
+  outline: none;
+}
+
+::placeholder,
+[class*="placeholder_"] {
+  color: rgba(255, 255, 255, 0.75) !important;
+  opacity: 1 !important;
+}
+
+/* Chat-Textfeld */
+div[class*="channelTextArea"] div[class*="scrollableContainer"] {
+  background-color: rgba(10, 15, 20, 0.85) !important;
+  border: 1px solid rgba(56, 239, 125, 0.3);
+  border-radius: 10px;
+  transition: border-color var(--sfs-fast) var(--sfs-ease), box-shadow var(--sfs-fast) var(--sfs-ease);
+}
+
+div[class*="channelTextArea"] div[class*="scrollableContainer"]:focus-within {
+  border-color: var(--main-color) !important;
+  box-shadow: 0 0 15px rgba(56, 239, 125, 0.4);
+}
+
+
+/* ============================================================
+   5. EINSTELLUNGEN & SERVER-EINSTELLUNGEN
+   ============================================================ */
+[class*="sidebarRegion"] {
+  background: rgba(8, 12, 18, 0.9) !important;
+}
+
+[class*="contentRegion"] {
+  background: rgba(10, 15, 22, 0.92) !important;
+}
+
+[class*="contentRegion"] :is(h1, h2, h3, h4, h5) {
+  color: #ffffff;
+}
+
+[class*="contentRegion"] [class*="description"],
+[class*="contentRegion"] [class*="note"] {
+  color: var(--text-muted);
+}
+
+/* Seitenleiste */
+[class*="sidebarRegion"] [role="tab"] {
+  color: #dcdde1;
+  border-radius: var(--sfs-radius-sm);
+  transition: background-color var(--sfs-fast) var(--sfs-ease), color var(--sfs-fast) var(--sfs-ease);
+}
+
+[class*="sidebarRegion"] [role="tab"]:hover {
+  background: var(--sfs-tint);
+  color: #ffffff;
+}
+
+[class*="sidebarRegion"] [role="tab"][aria-selected="true"] {
+  background: var(--channel-selected-bg);
+  color: #ffffff;
+}
+
+[class*="sidebarRegion"] [class*="header"] {
+  color: var(--main-color);
+  font-weight: 800;
+  letter-spacing: 0.6px;
+}
+
+
+/* ============================================================
+   6. KANÄLE & MITGLIEDERLISTE
+   ============================================================ */
+[class*="modeSelected"] {
+  background: var(--channel-selected-bg) !important;
+  color: var(--channel-selected) !important;
+  border-radius: var(--sfs-radius-sm);
+}
+
+[class*="modeSelected"] :is([class*="name_"], svg) {
+  color: var(--channel-selected) !important;
+}
+
+/* Mitglieder */
+[class*="members_"] [class*="member_"] {
+  border-radius: var(--sfs-radius-sm);
+  transition: background-color var(--sfs-fast) var(--sfs-ease);
+}
+
+[class*="members_"] [class*="member_"]:hover {
+  background: var(--sfs-tint);
+}
+
+[class*="members_"] [class*="membersGroup"] {
+  color: #c8c9ce;
+  font-weight: 700;
+}
+
+/* Hervorgehobene Nachrichten (@-Erwähnung an dich) */
+[class*="mentioned_"] {
+  background: rgba(56, 239, 125, 0.08) !important;
+  box-shadow: inset 3px 0 0 var(--main-color);
+}
+
+
+/* ============================================================
+   7. PROFIL-/MUTE-/DEAFEN-LEISTE (UNTEN LINKS)
+   ============================================================ */
+[class*="panels_"] {
+  background: var(--sfs-panel-bg) !important;
+  border: 1px solid var(--sfs-border);
+  border-radius: var(--sfs-radius);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+[class*="panels_"] :is([class*="title_"], [class*="nameTag"]) {
+  color: #ffffff !important;
+  font-weight: 700;
+}
+
+[class*="panels_"] [class*="subtext"] {
+  color: #c8c9ce !important;
+}
+
+[class*="panels_"] button {
+  color: #ffffff !important;
+  border-radius: var(--sfs-radius-sm);
+  transition: background-color var(--sfs-fast) var(--sfs-ease), transform var(--sfs-fast) var(--sfs-ease);
+}
+
+[class*="panels_"] button svg {
+  color: #ffffff !important;
+}
+
+[class*="panels_"] button:hover {
+  background: var(--sfs-tint-strong) !important;
+}
+
+[class*="panels_"] button:hover svg {
+  color: var(--main-color) !important;
+}
+
+[class*="panels_"] button:active {
+  transform: scale(0.94);
+}
+
+/* Aktiv: gemutet / deafened bleibt klar erkennbar */
+[class*="panels_"] button[aria-checked="true"] svg {
+  color: var(--danger-color) !important;
+}
+
+
+/* ============================================================
+   8. MENTIONS & BADGES
+   ============================================================ */
+.mention,
+span[class*="mention_"],
+span[class*="mention-"] {
+  background: rgba(56, 239, 125, 0.25) !important;
+  color: var(--main-color) !important;
+  font-weight: 700;
+  border-radius: 4px;
+  padding: 0 4px;
+  transition: background-color var(--sfs-fast) var(--sfs-ease), color var(--sfs-fast) var(--sfs-ease), box-shadow var(--sfs-fast) var(--sfs-ease);
+}
+
+.mention:hover,
+span[class*="mention_"]:hover,
+span[class*="mention-"]:hover {
+  background: var(--main-color) !important;
+  color: #000000 !important;
+  box-shadow: 0 0 12px rgba(56, 239, 125, 0.6);
+}
+
+[class*="numberBadge"],
+[class*="textBadge"],
+[class*="countBadge"] {
+  background: var(--main-color) !important;
+  color: #000000 !important;
+  font-weight: 800;
+  box-shadow: 0 0 10px rgba(56, 239, 125, 0.55);
+}
+
+
+/* ============================================================
+   9. BUTTONS
+   ============================================================ */
+button[class*="lookFilled"][class*="colorBrand"],
+button[class*="lookFilled"][class*="colorGreen"] {
+  background: var(--sfs-gradient) !important;
+  color: #000000 !important;
+  font-weight: 700;
+  border: none;
+  transition: box-shadow var(--sfs-fast) var(--sfs-ease), filter var(--sfs-fast) var(--sfs-ease), transform var(--sfs-fast) var(--sfs-ease);
+}
+
+button[class*="lookFilled"][class*="colorBrand"]:hover,
+button[class*="lookFilled"][class*="colorGreen"]:hover {
+  box-shadow: var(--sfs-glow);
+  filter: brightness(1.1);
+}
+
+button[class*="lookFilled"][class*="colorBrand"]:active,
+button[class*="lookFilled"][class*="colorGreen"]:active {
+  transform: scale(0.97);
+}
+
+/* Sekundäre Buttons: heller Text auf dunkler Fläche */
+button[class*="lookFilled"][class*="colorPrimary"],
+button[class*="lookFilled"][class*="colorGrey"] {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #ffffff !important;
+}
+
+button[class*="lookFilled"][class*="colorPrimary"]:hover,
+button[class*="lookFilled"][class*="colorGrey"]:hover {
+  background: var(--sfs-tint-strong) !important;
+}
+
+/* Link-Buttons */
+button[class*="lookLink"] {
+  color: var(--main-color) !important;
+}
+
+/* Icons */
+:is([class*="icon_"], [class*="iconBadge"], svg[class*="icon"]) {
+  color: #dcdde1;
+}
+
+:is(button, [role="button"]):hover svg {
+  color: var(--main-color);
+}
+
+
+/* ============================================================
+   10. BRANDING
+   ============================================================ */
+.cv-version,
+#app-mount .cv-watermark,
+[class*="wordmark"] :is(svg, img),
+[class*="wordmark"]::after {
+  display: none !important;
+}
+
+[class*="wordmark"] {
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+}
+
+[class*="wordmark"]::before {
+  display: block !important;
+  content: "SATISFACTION SFS  v1.0.0 (by M3wzs)" !important;
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+  letter-spacing: 0.8px;
+  color: var(--main-color);
+  background: rgba(56, 239, 125, 0.2);
+  border: 1px solid rgba(56, 239, 125, 0.4);
+  padding: 2px 8px;
+  border-radius: 4px;
+  text-shadow: 0 0 8px rgba(56, 239, 125, 0.5);
+}
+
+
+/* ============================================================
+   11. PERFORMANCE & BARRIEREFREIHEIT
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
 }
